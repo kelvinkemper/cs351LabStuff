@@ -46,7 +46,9 @@ public class ContiguousList {
 
     // Removes all elements from the list
     public void empty() {
-        // TODO: Implement the logic given above
+        for (int i = 0; i < elements.length; i++) {
+            delete(i);
+        }
     }
 
     // Returns true if the given element exists in the list, false otherwise
