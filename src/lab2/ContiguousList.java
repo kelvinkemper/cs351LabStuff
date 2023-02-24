@@ -1,13 +1,15 @@
 package lab2;
 
-import java.util.Arrays;
 import java.util.Collection;
+
 
 public class ContiguousList {
     // Array that backs the list
     private String[] elements;
     // Current number of elements in the list
     private int count;
+    private int currentArrayLength;
+
 
     public ContiguousList() {
         elements = new String[10];
@@ -16,16 +18,25 @@ public class ContiguousList {
 
     // Adds the given element to front of the list
     public void prepend(String e) {
-        for(int i = elements.length; i > 0; i--) {
-            if (elements[i-1] != null) {
+        if (isFull()) {
+            doubleArray();
+            for (int i = elements.length-1; i > 0; i--) {
                 elements[i] = elements[i-1];
             }
+            elements[0] = e;
+        } else {
+            for (int i = elements.length-1; i > 0; i--) {
+                elements[i] = elements[i-1];
+            }
+            elements[0] = e;
         }
-        elements[0] = e;
     }
 
     // Adds the given element to the end of the list
     public void append(String e) {
+        if (isFull()) {
+            doubleArray();
+        }
         int i = 0;
         while (elements[i] != null) {
             i++;
@@ -41,7 +52,26 @@ public class ContiguousList {
     // If the index is larger than any index in the list then
     // the element should be inserted at the end of the list
     public void insert(int index, String e) {
-        // TODO: Implement the logic given above
+        if (isFull()) {
+            doubleArray();
+        }
+        int end = elements.length-1;
+        while (index <= elements.length && index != 0) {
+            elements[end-1] = elements[end];
+            end--;
+        }
+        if (index == 0){
+            prepend(e);
+        }
+
+        if (index >elements.length) {
+            append(e);
+        }
+        //size of 5
+        // insert at 3
+        // element[3]= element[4]
+        // element[4]= element [5]
+        // element[5] =
     }
 
     // Removes all elements from the list
@@ -84,14 +114,24 @@ public class ContiguousList {
     // Deletes the element at the given index and returns it,
     // if the index doesn't exist then return null
     public String delete(int index) {
-        // TODO: Implement the logic given above
-        return null;
+        String returner = elements[index];
+        if (elements[index] == null) {
+            return null;
+        } else {
+            elements[index] = null;
+            return returner;
+        }
     }
 
     // Deletes the first occurrence of an element from the list if it exists,
     // if an element is removed return true, false otherwise
     public boolean delete(String e) {
-        // TODO: Implement the logic given above
+        for (int i = 0; i < elements.length-1; i++) {
+            if (elements[i] == e) {
+                elements[i] = null;
+                return true;
+            }
+        }
         return false;
     }
 
@@ -99,21 +139,41 @@ public class ContiguousList {
     // this includes duplicates. If it removes an element then return true,
     // otherwise false
     public boolean deleteAll(Collection<?> c) {
-        // TODO: Implement the logic given above
-        return false;
+        if (c.isEmpty()){
+            return false;
+        } else {
+            for (int i = 0; i < elements.length - 1; i++) {
+                if (c.contains(String.valueOf(elements[i]))) {
+                    elements[i] = null;
+                }
+            }
+        }
+
+        return true;
     }
 
     // Sets the element at the given index to the given element and
     // returns the old element, return null if the index doesn't exist
     public String mutate(int index, String e) {
-        // TODO: Implement the logic given above
-        return null;
+        String oldElement = elements[index];
+        if (elements[index] == null) {
+            return null;
+        }
+        else {
+            elements[index] = e;
+        }
+        return oldElement;
     }
 
     // Returns the current length of the list
     public int length() {
-        // TODO: Implement the logic given above
-        return -1;
+        int lenghtCounter = 0;
+        for (int i = 0; i < elements.length-1; i++) {
+            if (elements[i] != null) {
+                lenghtCounter++;
+            }
+        }
+        return lenghtCounter;
     }
 
     // Override toString from Object
@@ -124,8 +184,18 @@ public class ContiguousList {
     // nulls should not be printed
     @Override
     public String toString() {
-        // TODO: Implement the logic given above
-        return null;
+        String returner = "";
+        if (isEmpty()) {
+            return returner;
+        } else {
+            for (int i = 0; i < elements.length - 1; i++) {
+                if (elements[i] != null) {
+                    returner += elements[i] + ", ";
+                }
+            }
+            returner = "[" + returner.substring(0,returner.length()-2) + "]";
+        }
+        return returner;
     }
 
     public void print() {
@@ -140,7 +210,35 @@ public class ContiguousList {
     // nulls in the array should not be counted
     @Override
     public boolean equals(Object o) {
-        // TODO: Implement the logic given above
+        if (getElements() == o) {
+            return true;
+        }
         return false;
+    }
+
+    public String[] getElements(){
+        String[] returner = new String[elements.length];
+        for (int i = 0; i < elements.length-1; i++) {
+            returner[i] = elements[i];
+        }
+        return returner;
+    }
+
+    public boolean isFull() {
+        for (int i = 0; i < elements.length-1; i++) {
+            if (elements[i] == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void doubleArray() {
+        currentArrayLength = elements.length * 2;
+        String[] tempArray = new String[currentArrayLength];
+        for (int i = 0; i < elements.length ; i++) {
+            tempArray[i] = elements[i];
+        }
+        elements=tempArray;
     }
 }

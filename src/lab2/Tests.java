@@ -18,7 +18,7 @@ public class Tests {
         // Then some appends
         cl.append(triss);
         cl.append(saskia);
-        cl.print();
+
 
         shouldBe("Empty?", cl.isEmpty(), false);
         shouldBe("Has Geralt", cl.has("Geralt"), true);
