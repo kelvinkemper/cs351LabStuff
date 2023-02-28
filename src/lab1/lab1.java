@@ -42,13 +42,11 @@ public class lab1 {
                 printOverlap();
             }
             fileName = sc.nextLine();
-            if (!(fileName.equalsIgnoreCase("done"))) {
-                fileName = "src/" + fileName;
-            }
+
             overlapCounter = 0;
             withinCounter = 0;
 
-
+            // String fileName = "docs/lab1/test_case1.txt"
             // String fileName = "src/docs/lab1.lab1/test_case1.txt";
         }
         System.exit(1);
@@ -100,3 +98,4 @@ public class lab1 {
 
 
 }
+///Users/kelvinkemper/IdeaProjects/cs351LabStuff/src/lab1/lab1.java
