@@ -36,14 +36,14 @@ public class ConnectedList<T> implements ListInterface<T> {
 
     @Override
     public void insert(int index, T e) {
-        Node curr = head;
-        if (head == null) {
+        if (head == null || index == 0) {
             prepend(e);
         }
-        if (index > length()) {
+        else if (index > length()) {
             append(e);
         }
         else {
+            Node curr = head;
             for (int i = 0; i < index; i++) {
                 curr = curr.next;
             }
@@ -85,41 +85,39 @@ public class ConnectedList<T> implements ListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        Node curr = head;
-        for (int i = 0; i < length(); i++) {
-            if (curr.value != null) {
-                return true;
-            }
-            curr = curr.next;
+        if (head != null) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
     public T delete(int index) {
-        Node curr = head.next.next;
-        Node prev = head.next;
-        Node prevPrev = head;
-        if (index > length()-1) {
-            return null;
-        }
+        Node curr = head;
         if (index == 0) {
-            Node result = head;
-            head.setNext(head.next);
-            return result.value;
-        }else {
-            for (int i = 1; i < index; i++) {
-                prevPrev = prevPrev.next;
-                prev = prev.next;
+            deleteHeadAndUpdate();
+            return curr.value;
+        } else if (index > length()) {
+            return null;
+
+        } else {
+            Node prev = null;
+            for (int i = 0; i < index; i++) {
+                prev = curr;
                 curr = curr.next;
             }
-            Node result = prev;
-            prevPrev.setNext(curr);
-            return result.value;
+            if (index == length()-1) {
+                deleteTail();
+                return curr.value;
+            } else {
+                prev.setNext(curr.next);
+                //need previous
+                return curr.value;
+            }
+
         }
     }
 
-    //
     public Node updateTail() {
         Node curr = head.next.next;
         Node tail = head.next;
@@ -137,30 +135,67 @@ public class ConnectedList<T> implements ListInterface<T> {
         kicker.setNext(null);
     }
 
-    @Override
-    public boolean delete(T e) {
-        Node curr = head;
-        int counter = 0;
-        for (int i = 0; i < length(); i++) {
-            System.out.println(curr.value.toString());
-            if (curr.value == e && counter != 1) {
-                counter++;
-                return true;
-            }
-            curr = curr.next;
+    public void deleteHeadAndUpdate() {
+        if (head.next != null) {
+            head = head.next;
+        } else {
+            head = null;
         }
 
-        return false;
     }
 
     @Override
-    public boolean deleteAll(Collection<?> c) {
+    public boolean delete(T e) {
+        Node curr = head;
+        Node prev = null;
+        for (int i = 0; i < length(); i++) {
+            if (i == 0 && curr.value.equals(e)) {
+                deleteHeadAndUpdate();
+                return true;
+            } else if (i == length()-1 && curr.value.equals(e)) {
+                deleteTail();
+                return true;
+            } else {
+                if (curr.value.equals(e)) {
+                    prev.setNext(curr.next);
+                    return true;
+                }
+            }
+            prev = curr;
+            curr = curr.next;
+        }
         return false;
+    }
+
+
+    @Override
+    public boolean deleteAll(Collection<?> c) {
+        if (c.isEmpty()) {
+            return false;
+        } else {
+            head = null;
+        }
+        return true;
     }
 
     @Override
     public T mutate(int index, T e) {
-        return null;
+        Node curr = head;
+        T temp = null;
+        if (index == 0) {
+            temp = curr.value;
+            curr.setValue(e);
+            return temp;
+        } else if (index > length()) {
+            return null;
+        } else {
+            for (int i = 0; i < index; i++) {
+                curr = curr.next;
+            }
+            temp = curr.value;
+            curr.setValue(e);
+            return temp;
+        }
     }
 
     @Override
@@ -177,13 +212,14 @@ public class ConnectedList<T> implements ListInterface<T> {
 
     @Override
     public String toString() {
-        if (length() == 0) {
-            return "[]";
-        }
         String result = "";
         Node curr = head;
+        if (length() == 0 || curr==null) {
+            return "[]";
+        }
+
         while (curr != null) {
-            result+= curr.value.toString() + ", ";
+            result += curr.value.toString() + ", ";
             curr = curr.next;
         }
         result = "[" + result.substring(0,result.length()-2) + "]";

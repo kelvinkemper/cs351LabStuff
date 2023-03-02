@@ -17,15 +17,9 @@ public class Tests {
         // Now let's try prepend
         cl.prepend(geralt);
         cl.prepend(yen);
-
-
         // Then some appends
         cl.append(triss);
         cl.append(saskia);
-        System.out.println(cl);
-        cl.updateTail();
-        cl.deleteTail();
-        System.out.println(cl);
 
 
         shouldBe("ToString", cl.toString(), "[Yen, Geralt, Triss, Saskia]");
@@ -36,11 +30,7 @@ public class Tests {
         shouldBe("Retrieve Index 2", cl.retrieve(2), triss);
         shouldBe("Retrieve Index 10", cl.retrieve(10), null);
         shouldBe("Delete Index 1", cl.delete(1), geralt);
-        System.out.println();
-
         shouldBe("Delete Saskia", cl.delete(saskia), true);
-        System.out.println(cl);
-        System.out.println();
         shouldBe("Delete Ciri", cl.delete("Ciri"), false);
         shouldBe("Size 2", cl.length(), 2);
         shouldBe("Mutate 0", cl.mutate(0, "Ciri"), yen);
@@ -52,14 +42,12 @@ public class Tests {
         shouldBe("Delete Nothing", cl.deleteAll(new ArrayList<>()), false);
 
         cl.empty();
-
         shouldBe("Empty", cl.isEmpty(), true);
 
-
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 100; i++) {
             cl.insert(0, geralt);
         }
-        System.out.println(cl);
+
 
         shouldBe("Size 100", cl.length(), 100);
     }
